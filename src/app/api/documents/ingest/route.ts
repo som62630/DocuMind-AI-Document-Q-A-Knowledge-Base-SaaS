@@ -101,22 +101,22 @@ export async function POST(req: NextRequest) {
 
     // Insert chunks in batches of 50 in parallel
     const CHUNK_INSERT_BATCH = 50
-    const insertPromises: Promise<any>[] = []
+    const insertPromises = []
 
     for (let i = 0; i < chunkRecords.length; i += CHUNK_INSERT_BATCH) {
       const batch = chunkRecords.slice(i, i + CHUNK_INSERT_BATCH)
       insertPromises.push(
-        supabase
-          .from('document_chunks')
-          .insert(batch)
-          .then(({ error: chunkInsertErr }) => {
-            if (chunkInsertErr) {
-              throw new Error(`Failed to insert document chunks into database: ${chunkInsertErr.message}`)
-            }
-          })
+        (async () => {
+          const { error: chunkInsertErr } = await supabase
+            .from('document_chunks')
+            .insert(batch)
+          if (chunkInsertErr) {
+            throw new Error(`Failed to insert document chunks into database: ${chunkInsertErr.message}`)
+          }
+        })()
       )
     }
-    
+
     await Promise.all(insertPromises)
 
     // 8. Mark document as 'ready'
