@@ -19,8 +19,15 @@ function getLLMProvider() {
     return { provider: anthropic, model: anthropic('claude-sonnet-4-5') }
   }
   if (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('placeholder')) {
-    const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
-    return { provider: openai, model: openai('gpt-4o-mini') }
+    const openai = createOpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+    })
+    // Use grok-3-mini when pointing at xAI, otherwise gpt-4o-mini
+    const modelName = (process.env.OPENAI_BASE_URL || '').includes('x.ai')
+      ? 'grok-3-mini'
+      : 'gpt-4o-mini'
+    return { provider: openai, model: openai(modelName) }
   }
   throw new Error(
     'No LLM API key configured. Set ANTHROPIC_API_KEY or OPENAI_API_KEY in .env.local'

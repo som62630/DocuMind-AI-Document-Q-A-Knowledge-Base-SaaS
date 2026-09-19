@@ -11,7 +11,10 @@ function getOpenAIClient(): OpenAI | null {
   if (!apiKey || apiKey.startsWith('sk-placeholder')) {
     return null
   }
-  return new OpenAI({ apiKey })
+  return new OpenAI({
+    apiKey,
+    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+  })
 }
 
 /**
