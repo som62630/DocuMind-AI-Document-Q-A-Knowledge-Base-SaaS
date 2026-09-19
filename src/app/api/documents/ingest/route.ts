@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     // Insert chunks in batches of 50 in parallel
     const CHUNK_INSERT_BATCH = 50
-    const insertPromises: Promise<void>[] = []
+    const insertPromises: Promise<any>[] = []
 
     for (let i = 0; i < chunkRecords.length; i += CHUNK_INSERT_BATCH) {
       const batch = chunkRecords.slice(i, i + CHUNK_INSERT_BATCH)
