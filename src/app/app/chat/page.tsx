@@ -29,7 +29,8 @@ export default async function ChatPage({ searchParams }: ChatPageProps) {
 
   // Optionally load messages for a specific conversation from query params
   const activeId = searchParams?.id;
-  let initialMessages = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let initialMessages: any[] = [];
 
   if (activeId) {
     const msgsResult = await getMessagesAction(activeId);

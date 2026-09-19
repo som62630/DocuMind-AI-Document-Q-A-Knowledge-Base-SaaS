@@ -65,7 +65,7 @@ function renderMessageContent(
 
 // ─── Custom Streaming Hook ──────────────────────────────────────────────────
 
-function useStreamingChat(conversationId: string | undefined) {
+function useStreamingChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [streamingCitations, setStreamingCitations] = useState<CitationItem[]>([])
@@ -178,7 +178,7 @@ export function ChatWindow({
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const { messages, isLoading, streamingCitations, sendMessage, resetMessages } =
-    useStreamingChat(activeConversationId)
+    useStreamingChat()
 
   // Load initial messages
   useEffect(() => {

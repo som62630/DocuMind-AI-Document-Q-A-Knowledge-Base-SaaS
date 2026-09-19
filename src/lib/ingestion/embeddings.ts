@@ -30,15 +30,15 @@ export async function generateEmbeddings(
     return texts.map((t) => generateMockEmbedding(t, 1536))
   }
 
-  const allEmbeddings: number[][] = []
+  const batchPromises: Promise<number[][]>[] = []
 
   for (let i = 0; i < texts.length; i += BATCH_SIZE) {
     const batch = texts.slice(i, i + BATCH_SIZE)
-    const batchEmbeddings = await generateBatchWithRetry(openai, batch)
-    allEmbeddings.push(...batchEmbeddings)
+    batchPromises.push(generateBatchWithRetry(openai, batch))
   }
 
-  return allEmbeddings
+  const allBatchEmbeddings = await Promise.all(batchPromises)
+  return allBatchEmbeddings.flat()
 }
 
 /**
